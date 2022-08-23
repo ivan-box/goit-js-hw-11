@@ -19,7 +19,7 @@ const paintMarkup = ({
   capital,
   languages,
 }) => `<li class="country-info">
-        <img class="flag" src="${svg}" alt="National Flag" width='240' height='160' >
+        <img class="flag" src="${svg}" alt="National Flag" width='210' height='140' >
         <h2 class="country-title">${common}</h2>
         <p class="country-text"><b>Capital:</b> ${capital}</p>
         <p class="country-text"><b>Population:</b> ${population}</p>
@@ -29,7 +29,7 @@ const paintMarkup = ({
     </li>`;
 const paintMarkup1 = ({ flags: { svg }, name: { common } }) => {
   return `<li class="country-info">
-        <img class="flag" src="${svg}" alt="National Flag" width='240' height='160' >
+        <img class="flag" src="${svg}" alt="National Flag" width='210' height='140' >
         <h2 class="country-title">${common}</h2>
          </li>`;
 };
