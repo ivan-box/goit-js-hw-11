@@ -18,3 +18,8 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+ul {
+  display: flex;
+  gap: 50px;
+  list-style-type: none;
+}
