@@ -35,20 +35,21 @@ const paintMarkup1 = ({ flags: { svg }, name: { common } }) => {
 };
 
 function onFindCountryInput(e) {
-  fetchCountries(e.target.value).then(data => {
-    if (data.length <= 10 && data.length > 1) {
-      return (countryEl.innerHTML = data.map(paintMarkup1).join(''));
-    }
-    if (data.length === 1) {
-      return (countryEl.innerHTML = data.map(paintMarkup).join(''));
-    }
-    if (data.length === undefined) {
-      return (countryEl.innerHTML = '');
-    }
-    if (e.target.value.trim() !== '') {
+  countryEl.innerHTML = '';
+  if (e.target.value.trim() !== '') {
+    fetchCountries(e.target.value).then(data => {
+      if (data.length <= 10 && data.length > 1) {
+        return (countryEl.innerHTML = data.map(paintMarkup1).join(''));
+      }
+      if (data.length === 1) {
+        return (countryEl.innerHTML = data.map(paintMarkup).join(''));
+      }
+      if (data.length === '') {
+        return (countryEl.innerHTML = '');
+      }
       Notiflix.Notify.info(
         'Too many matches found. Please enter a more specific name.'
       );
-    }
-  });
+    });
+  }
 }
