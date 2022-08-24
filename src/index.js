@@ -2,25 +2,45 @@ import './css/styles.css';
 import { getImage } from './js/fetchCountries';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
-
-// const gallery = document.querySelector('.gallery');
+import simpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const inputForm = document.querySelector('#search-form');
 const galleryBox = document.querySelector('.gallery');
+const loadMoreBtn = document.querySelector('.load-more');
 inputForm.addEventListener('submit', onClickSubmitBtn);
+loadMoreBtn.addEventListener('click', onBtnLoadMore);
 // const submitBtn = document.querySelector('[type="submit"]');
-// inputForm.addEventListener('input', onInputInForm);
-// const DEBOUNCE_DELAY = 300;
+const gallery = new simpleLightbox('.gallery a');
+let currentPage = 1;
 
-// getImage();
 async function onClickSubmitBtn(e) {
   e.preventDefault();
+  currentPage = 1;
   const inputValue = inputForm.elements.searchQuery.value;
-  // console.log(inputForm.elements.searchQuery.value);
+  if (inputValue === '') {
+    return Notiflix.Notify.failure('Vvedite Svoi Zapros');
+  }
+
   const response = await getImage(inputValue);
-  console.log(response.hits);
+  // console.log(response.hits);
   markup(response.hits);
+  gallery.refresh();
+  // loadMoreBtn.hidden = false;
+  loadMoreBtn.removeAttribute('hidden');
+
   return response;
+}
+async function onBtnLoadMore() {
+  loadMoreBtn.disabled = true;
+  loadMoreBtn.hidden = true;
+  const inputValue = inputForm.elements.searchQuery.value;
+  currentPage += 1;
+  const response = await getImage(inputValue, currentPage);
+  markup(response.hits);
+  gallery.refresh();
+  loadMoreBtn.disabled = false;
+  loadMoreBtn.hidden = false;
 }
 
 function markup(result) {
@@ -54,51 +74,3 @@ function markup(result) {
 </div></a>`;
   });
 }
-
-// const inputFields = document.querySelector('#search-box');
-// inputFields.addEventListener(
-//   'input',
-//   debounce(onFindCountryInput, DEBOUNCE_DELAY)
-// );
-
-// const paintMarkup = ({
-//   flags: { svg },
-//   name: { common },
-//   population,
-//   capital,
-//   languages,
-// }) => `<li class="country-info">
-//         <img class="flag" src="${svg}" alt="National Flag" width='210' height='140' >
-//         <h2 class="country-title">${common}</h2>
-//         <p class="country-text"><b>Capital:</b> ${capital}</p>
-//         <p class="country-text"><b>Population:</b> ${population}</p>
-//         <p class="country-text"><b>Languages:</b>  ${Object.values(
-//           languages
-//         )}</p>
-//     </li>`;
-// const paintMarkup1 = ({ flags: { svg }, name: { common } }) => {
-//   return `<li class="country-info">
-//         <img class="flag" src="${svg}" alt="National Flag" width='210' height='140' >
-//         <h2 class="country-title">${common}</h2>
-//          </li>`;
-// };
-
-// function onFindCountryInput(e) {
-//   countryEl.innerHTML = '';
-//   if (e.target.value.trim() !== '') {
-//     fetchCountries(e.target.value).then(data => {
-//       if (data.length <= 10 && data.length > 1) {
-//         return (countryEl.innerHTML = data.map(paintMarkup1).join(''));
-//       }
-//       if (data.length === 1) {
-//         return (countryEl.innerHTML = data.map(paintMarkup).join(''));
-//       }
-//       if (data.length === '') {
-//         return (countryEl.innerHTML = '');
-//       }
-//       Notiflix.Notify.info(
-//         'Too many matches found. Please enter a more specific name.'
-//       );
-//     });
-//   }
-// }

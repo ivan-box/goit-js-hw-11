@@ -41,7 +41,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  /* gap: 10px; */
 }
 
 .photo-img {
@@ -63,4 +62,14 @@ body {
   color: #000;
   font-size: 16px;
   font-weight: 500;
+}
+
+.load-more {
+  width: 90px;
+  height: 30px;
+  margin: 20px 47%;
+}
+#search-form {
+  display: block;
+  margin: 20px auto;
 }
