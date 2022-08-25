@@ -10,23 +10,24 @@ const galleryBox = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 inputForm.addEventListener('submit', onClickSubmitBtn);
 loadMoreBtn.addEventListener('click', onBtnLoadMore);
-// const submitBtn = document.querySelector('[type="submit"]');
+
 const gallery = new simpleLightbox('.gallery a');
 let currentPage = 1;
-
+const totalHits = 500;
+const perPage = 40;
 async function onClickSubmitBtn(e) {
   e.preventDefault();
+  galleryBox.innerHTML = '';
   currentPage = 1;
+
   const inputValue = inputForm.elements.searchQuery.value;
   if (inputValue === '') {
     return Notiflix.Notify.failure('Vvedite Svoi Zapros');
   }
 
   const response = await getImage(inputValue);
-  // console.log(response.hits);
   markup(response.hits);
   gallery.refresh();
-  // loadMoreBtn.hidden = false;
   loadMoreBtn.removeAttribute('hidden');
 
   return response;
@@ -36,11 +37,17 @@ async function onBtnLoadMore() {
   loadMoreBtn.hidden = true;
   const inputValue = inputForm.elements.searchQuery.value;
   currentPage += 1;
-  const response = await getImage(inputValue, currentPage);
+  const response = await getImage(inputValue, currentPage, perPage);
   markup(response.hits);
   gallery.refresh();
   loadMoreBtn.disabled = false;
   loadMoreBtn.hidden = false;
+  if (Math.ceil(totalHits / perPage) < currentPage + 1) {
+    loadMoreBtn.hidden = true;
+    return Notiflix.Notify.failure(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
 }
 
 function markup(result) {
